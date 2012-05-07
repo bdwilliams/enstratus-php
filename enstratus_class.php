@@ -3,18 +3,18 @@
 * Enstratus PHP Wrapper
 *
 * @link https://github.com/bdwilliams
-* @version 0.1-dev
+* @version 0.6-dev
 */
 class Enstratus
 {
 	public static $api_key;
 	public static $secret_key;
-	public static $environment;  // dev or prod
+	public static $environment = 'prod';  // dev or prod
 	public static $api_endpoint;
-
+	public static $timestamp;
+	
 	private static $default_user_agent = 'PHPWrapper';
 	private static $signature;
-	private static $timestamp;
 
 	/**
 	* Constructor
@@ -37,7 +37,7 @@ class Enstratus
 	*/
 	public function getRegions($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-07-15/geography/Region/".$id) : $this->getRequest("/api/enstratus/2011-07-15/geography/Region");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-07-15/geography/Region/".$id) : $this->sendRequest("/api/enstratus/2011-07-15/geography/Region");
 	}
 	
 	/**
@@ -50,7 +50,7 @@ class Enstratus
 	*/
 	public function getRoles($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/admin/Role/".$id) : $this->getRequest("/api/enstratus/2011-02-24/admin/Role");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/admin/Role/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/admin/Role");
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Enstratus
 	*/
 	public function getUsers($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/admin/User/".$id) : $this->getRequest("/api/enstratus/2011-02-24/admin/User");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/admin/User/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/admin/User");
 	}
 
 	/**
@@ -75,7 +75,7 @@ class Enstratus
 	*/
 	public function getSnapshots($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/infrastructure/Snapshot/".$id) : $this->getRequest("/api/enstratus/2011-02-24/infrastructure/Snapshot");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/infrastructure/Snapshot/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/infrastructure/Snapshot");
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Enstratus
 	*/
 	public function getVolumes($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/infrastructure/Volume/".$id) : $this->getRequest("/api/enstratus/2011-02-24/infrastructure/Volume");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/infrastructure/Volume/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/infrastructure/Volume");
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class Enstratus
 	*/
 	public function getCustomers()
 	{
-		return $this->getRequest("/api/enstratus/2011-02-24/admin/Customer");
+		return $this->sendRequest("/api/enstratus/2011-02-24/admin/Customer");
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Enstratus
 	*/
 	public function getGroups($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/admin/Group/".$id) : $this->getRequest("/api/enstratus/2011-02-24/admin/Group");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/admin/Group/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/admin/Group");
 	}
 		
 	/**
@@ -126,7 +126,7 @@ class Enstratus
 	*/
 	public function getBillingCodes($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/admin/BillingCode/".$id) : $this->getRequest("/api/enstratus/2011-02-24/admin/BillingCode");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/admin/BillingCode/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/admin/BillingCode");
 	}
 
 	/**
@@ -137,7 +137,7 @@ class Enstratus
 	*/
 	public function getFirewalls($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/network/Firewall/".$id) : $this->getRequest("/api/enstratus/2011-02-24/network/Firewall");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/network/Firewall/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/network/Firewall");
 	}
 		
 	/**
@@ -150,7 +150,7 @@ class Enstratus
 	*/
 	public function getJobs($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/admin/Job/".$id) : $this->getRequest("/api/enstratus/2011-02-24/admin/Job");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/admin/Job/".$id) : $this->sendRequest("/api/enstratus/2011-02-24/admin/Job");
 	}
 
 	/**
@@ -168,7 +168,7 @@ class Enstratus
 	*/
 	public function getNetworks($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-07-15/network/Network/".$id) : $this->getRequest("/api/enstratus/2011-07-15/network/Network");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-07-15/network/Network/".$id) : $this->sendRequest("/api/enstratus/2011-07-15/network/Network");
 	}
 		
 	/**
@@ -184,7 +184,7 @@ class Enstratus
 	*/
 	public function getConfigurationManagement($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-07-15/automation/ConfigurationManagementOption/".$id) : $this->getRequest("/api/enstratus/2011-07-15/automation/ConfigurationManagementOption");
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-07-15/automation/ConfigurationManagementOption/".$id) : $this->sendRequest("/api/enstratus/2011-07-15/automation/ConfigurationManagementOption");
 	}
 		
 	/**
@@ -197,7 +197,7 @@ class Enstratus
 	*/	
 	public function getServerAnalytics($id = NULL)
 	{
-		return ($id !== NULL) ? $this->getRequest("/api/enstratus/2011-07-15/analytics/ServerAnalytics/".$id) : "Invalid Server ID Specified.";
+		return ($id !== NULL) ? $this->sendRequest("/api/enstratus/2011-07-15/analytics/ServerAnalytics/".$id) : "Invalid Server ID Specified.";
 	}
 		
 	/**
@@ -211,7 +211,7 @@ class Enstratus
 	public function getMachineImage($regionId = NULL)
 	{
 		$data = ($regionId !== NULL) ? "?regionId=".$regionId : NULL;
-		return ($data !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/infrastructure/MachineImage", "GET", "json", $data) : "Invalid Region ID Specified.";
+		return ($data !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/infrastructure/MachineImage", "GET", "json", $data) : "Invalid Region ID Specified.";
 	}
 
 	/**
@@ -223,7 +223,7 @@ class Enstratus
 	public function getFirewallRules($firewallId = NULL)
 	{
 		$data = ($firewallId !== NULL) ? "?firewallId=".$firewallId : NULL;
-		return ($data !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/network/FirewallRule", "GET", "json", $data) : "Invalid Firewall ID Specified.";
+		return ($data !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/network/FirewallRule", "GET", "json", $data) : "Invalid Firewall ID Specified.";
 	}
 		
 	/**
@@ -237,7 +237,7 @@ class Enstratus
 	public function getServers($regionId = NULL)
 	{
 		$data = ($regionId !== NULL) ? "?regionId=".$regionId : NULL;
-		return ($data !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/infrastructure/Server", "GET", "json", $data) : "Invalid Server ID Specified.";
+		return ($data !== NULL) ? $this->sendRequest("/api/enstratus/2011-12-15/infrastructure/Server", "GET", "json", $data) : "Invalid Region ID Specified.";
 	}
 
 	/**
@@ -249,7 +249,7 @@ class Enstratus
 	public function getStorageObject($regionId = NULL)
 	{
 		$data = ($regionId !== NULL) ? "?regionId=".$regionId : NULL;
-		return ($data !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/StorageObject", "GET", "json", $data) : "Invalid Region ID Specified.";
+		return ($data !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/StorageObject", "GET", "json", $data) : "Invalid Region ID Specified.";
 	}
 
 	/**
@@ -263,7 +263,7 @@ class Enstratus
 	public function getDatacenters($regionId = NULL)
 	{
 		$data = ($regionId !== NULL) ? "?regionId=".$regionId : NULL;
-		return ($data !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/geography/DataCenter", "GET", "json", $data) : "Invalid Region ID Specified.";
+		return ($data !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/geography/DataCenter", "GET", "json", $data) : "Invalid Region ID Specified.";
 	}
 		
 	/**
@@ -280,18 +280,18 @@ class Enstratus
 	public function getServerProducts($regionId = NULL)
 	{
 		$data = ($regionId !== NULL) ? "?regionId=".$regionId : NULL;
-		return ($data !== NULL) ? $this->getRequest("/api/enstratus/2011-02-24/infrastructure/ServerProduct", "GET", "json", $data) : "Invalid Server Product ID Specified.";
+		return ($data !== NULL) ? $this->sendRequest("/api/enstratus/2011-02-24/infrastructure/ServerProduct", "GET", "json", $data) : "Invalid Server Product ID Specified.";
 	}
-		
+
 	/**
-	* CURL GET request
+	* CURL request
 	*
 	* @param string $uri API access url
 	* @param string $format JSON|XML
 	* @param string $data query string
 	* @return response array
 	*/
-	public function getRequest($uri, $method = 'GET', $format = 'json', $data = NULL)
+	public function sendRequest($uri, $method = 'GET', $format = 'json', $data = NULL)
 	{
 		$string = $this->api_key.":".$method.":".$uri.":".$this->timestamp.":".self::$default_user_agent;
 		$this->signature = base64_encode(hash_hmac('sha256', utf8_encode($string), utf8_encode($this->secret_key), true));
@@ -301,15 +301,17 @@ class Enstratus
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($c, CURLOPT_HTTPHEADER, 
 						array('User-Agent: '.self::$default_user_agent, 
-							'Accept: application/'.$format, 
+							'Accept: application/'.$format,
+							'Content-Type: application/'.$format,
 							'Host: api.enstratus.com', 
 							'x-es-details: basic', 
 							'x-es-with-perms: false', 
 							'x-esauth-access: '.$this->api_key, 
 							'x-esauth-signature: '.$this->signature, 
 							'x-esauth-timestamp: '.$this->timestamp));
+							
 		curl_setopt($c, CURLOPT_URL, $this->api_endpoint.$uri.$data);
-		
+				
 		$ch = curl_exec($c);
 		
 		if ($ch === false)
